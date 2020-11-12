@@ -9,7 +9,7 @@ const connectDB = async () => {
     useUnifiedTopology: true,
   });
 
-  console.log(chalk.gray`[mongoDB]: connected at ${con.connection.host}`);
+  console.log(chalk.gray`[mongoDB] connected at ${con.connection.host}`);
 };
 
 module.exports = connectDB;

@@ -6,10 +6,20 @@ const app = express();
 const PORT = config.SERVER_PORT ;
 const ENV = config.NODE_ENV;
 
-//connect to database
+// connect to database
 connectDB()
+
+// route files
+
+
+// security middlewares
+
+
+// mount routes
+
+// error handler
 
 const server = app.listen(
   PORT,
-  console.log(chalk.blueBright`[${ENV} mode] : Server running on port ${PORT}`)
+  console.log(chalk.blueBright`[${ENV} mode] Server running on port ${PORT}`)
 );
