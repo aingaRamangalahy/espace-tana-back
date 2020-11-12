@@ -114,4 +114,4 @@ const EspaceSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("espaces", EspaceSchema);
+module.exports = mongoose.model("Espace", EspaceSchema);
