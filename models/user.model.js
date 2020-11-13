@@ -20,8 +20,13 @@ const UserSchema = new mongoose.Schema({
 
   role: {
     type: String,
-    enum: ["user", "publisher"],
+    enum: ["user", "owner"],
     default: "user",
+  },
+
+  connected: {
+    type: Boolean,
+    default: false,
   },
 
   password: {
@@ -48,9 +53,16 @@ UserSchema.pre("save", async function (next) {
 
 /** methods and statics */
 UserSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id }, config.SECRET_TOKEN, {
-    expiresIn: "10m",
-  });
+  return jwt.sign(
+    {
+      id: this._id,
+      role: this.role,
+    },
+    config.SECRET_TOKEN,
+    {
+      expiresIn: "10m",
+    }
+  );
 };
 
 UserSchema.methods.comparePassword(async function (inputPassword) {
