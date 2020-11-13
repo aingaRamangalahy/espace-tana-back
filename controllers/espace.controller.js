@@ -40,7 +40,7 @@ exports.getEspace = asyncHandler(async (req, res, next) => {
  * @access private
  */
 exports.createEspace = asyncHandler(async (req, res, next) => {
-  const espace = await Espace.create(...req.body);
+  const espace = await Espace.create(req.body);
 
   res.status(200).json({
     success: true,
@@ -62,7 +62,7 @@ exports.updateEspace = asyncHandler(async (req, res, next) => {
     );
   }
 
-  espace = await Espace.findByIdAndUpdate(req.params.id, ...req.body, {
+  espace = await Espace.findByIdAndUpdate(req.params.id, req.body, {
     runValidators: true,
     new: true,
   });
