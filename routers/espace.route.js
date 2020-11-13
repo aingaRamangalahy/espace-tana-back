@@ -17,3 +17,5 @@ router.route("/:id")
   .get(getEspace)
   .put(updateEspace)
   .delete(deleteEspace);
+
+module.exports = router;

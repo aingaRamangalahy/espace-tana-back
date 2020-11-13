@@ -5,9 +5,13 @@ const config = require("./config");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/errorHanlder");
 
-const app = express();
 const PORT = config.SERVER_PORT;
 const ENV = config.NODE_ENV;
+
+const app = express(); // initialize express
+
+app.use(express.json()) // Body parser
+
 
 // connect to database
 connectDB();
