@@ -1,23 +1,48 @@
 const asyncHandler = require("../middlewares/asyncHandler");
-const ErrorHangler = require("../middlewares/errorHanlder");
 const User = require("../models/user.model");
+const { use } = require("../routes/auth.route");
+const ErrorResponse = require("../utils/errorResponse");
 
 /**
  * @description register
  * @route POST /api/v1/users/registe
  * @access public
  */
-exports.regiter = asyncHandler(async (req, res, next) => {
+exports.register = asyncHandler(async (req, res, next) => {
+  const { email, firstName, password } = req.body;
+
+  if (!email || !firstName || !password) {
+    return next(
+      new ErrorResponse(`Veuillez remplir les champs obligatoires`, 400)
+    );
+  }
+
+  // check if email adresse is already  used
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return next(
+      new ErrorResponse(`Cet email est déjà utilisé pour un autre compte`, 400)
+    );
+  }
+
+  // create the user and send token
   const user = await User.create(req.body);
+  const token = await user.getSignedJwtToken();
 
-  const token = user.getSignedJwtToken();
-
-  user.conneted = true;
+  user.connected = true;
   await user.save();
+
+  const { _id, lastName, role, connected } = user;
 
   res.status(200).json({
     success: true,
-    data: user,
+    data: {
+      _id,
+      firstName,
+      lastName,
+      role,
+      connected,
+    },
     token,
   });
 });
@@ -27,12 +52,47 @@ exports.regiter = asyncHandler(async (req, res, next) => {
  * @route POST /api/v1/users/login
  * @access public
  */
-exports.regiter = asyncHandler(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
+exports.login = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
 
-  if (!user) {
-    return next(new ErrorResponse(`Cet email n'existe pas encore`, 404));
+  // user validation
+  if (!email || !password) {
+    return next(new ErrorResponse(`Identifiants invalides`, 401));
   }
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    return next(new ErrorResponse(`Identifiants invalides`, 404));
+  }
+
+  const isPasswordMatching = await user.comparePassword(password);
+  if (!isPasswordMatching) {
+    return next(new ErrorResponse(`Identifiants invalides`, 401));
+  }
+
+  if (user.connected) {
+    return next(new ErrorResponse(`Utilisateur déjà connecté`, 400));
+  }
+
+  // create token
+  const token = await user.getSignedJwtToken();
+
+  // set user to connected
+  user.connected = true;
+  await user.save();
+
+  const { _id, firstName, lastName, role, connected } = user;
+  res.status(200).json({
+    success: true,
+    data: {
+      _id,
+      firstName,
+      lastName,
+      role,
+      connected,
+    },
+    token,
+  });
 });
 
 /**
@@ -40,16 +100,32 @@ exports.regiter = asyncHandler(async (req, res, next) => {
  * @route POST /api/v1/users/logout
  * @access public
  */
-exports.regiter = asyncHandler(async (req, res, next) => {});
+exports.logout = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.body._id);
+
+  if (!user) {
+    return next(new ErrorResponse(`Utilisateur non reconnu`, 404));
+  }
+
+  user.connected = false;
+  user.save();
+
+  res.status(200).json({
+    success: true,
+    data: {},
+  });
+});
 
 /**
  * @description forgot password
  * @route POST /api/v1/users/forgotpassword
  * @access public
  */
+exports.forgotPassword = asyncHandler(async (req, res, next) => {});
 
 /**
  * @description reset password
  * @route POST /api/v1/users/resetpassword
  * @access private
  */
+exports.resetPassword = asyncHandler(async (req, res, next) => {});

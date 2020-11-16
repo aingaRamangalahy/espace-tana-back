@@ -3,25 +3,26 @@ const chalk = require("chalk");
 const config = require("./config");
 
 const connectDB = require("./config/db");
-const errorHandler = require("./middlewares/errorHanlder");
+const errorHandler = require("./middlewares/errorHandler");
 
 const PORT = config.SERVER_PORT;
 const ENV = config.NODE_ENV;
 
 const app = express(); // initialize express
 
-app.use(express.json()) // Body parser
-
+app.use(express.json()); // Body parser
 
 // connect to database
 connectDB();
 
 // route files
-const espaces = require("./routers/espace.route");
+const espaces = require("./routes/espace.route");
+const auth = require("./routes/auth.route");
 
 // security middlewares
 
 // mount routes
+app.use("/api/v1/auth", auth);
 app.use("/api/v1/espaces", espaces);
 
 // error handler

@@ -4,9 +4,14 @@ const jwt = require("jsonwebtoken");
 const config = require("../config");
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, "Veuillez ajouter un nom"],
+    required: [true, "Veuillez ajouter votre prénom"],
+  },
+
+  lastName: {
+    type: String,
+    required: [true, "Veuillez ajouter votre nom"],
   },
 
   email: {
@@ -15,7 +20,8 @@ const UserSchema = new mongoose.Schema({
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       "Veuillez ajouter une adresse email valide",
     ],
-    required: false,
+    required: true,
+    unique: true
   },
 
   role: {
@@ -48,6 +54,9 @@ const UserSchema = new mongoose.Schema({
 // Encrypte user password
 UserSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
+  if (!this.isModified("password")){
+    next();
+  }
   this.password = await bcrypt.hash(this.password, salt);
 });
 
@@ -58,14 +67,11 @@ UserSchema.methods.getSignedJwtToken = function () {
       id: this._id,
       role: this.role,
     },
-    config.SECRET_TOKEN,
-    {
-      expiresIn: "10m",
-    }
+    config.SECRET_TOKEN
   );
 };
 
-UserSchema.methods.comparePassword(async function (inputPassword) {
+UserSchema.methods.comparePassword = function (inputPassword) {
   return bcrypt.compare(inputPassword, this.password);
-});
+};
 module.exports = mongoose.model("User", UserSchema);

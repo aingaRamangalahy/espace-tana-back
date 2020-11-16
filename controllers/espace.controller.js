@@ -21,11 +21,11 @@ exports.getEspaces = asyncHandler(async (req, res, next) => {
  * @access public
  */
 exports.getEspace = asyncHandler(async (req, res, next) => {
-  const espace = await Espace.findById(req.params.id);
+  const espace = await Espace.findById(req.params._id);
 
   if (!espace) {
     return next(
-      new ErrorResponse(`Espace not found with the id of ${req.params.id}`, 404)
+      new ErrorResponse(`Espace not found with the id of ${req.params._id}`, 404)
     );
   }
   res.status(200).json({
@@ -54,15 +54,15 @@ exports.createEspace = asyncHandler(async (req, res, next) => {
  * @access private
  */
 exports.updateEspace = asyncHandler(async (req, res, next) => {
-  let espace = await Espace.findById(req.params.id);
+  let espace = await Espace.findById(req.params._id);
 
   if (!espace) {
     return next(
-      new ErrorResponse(`Espace not found with the id of ${req.params.id}`, 404)
+      new ErrorResponse(`Espace not found with the id of ${req.params._id}`, 404)
     );
   }
 
-  espace = await Espace.findByIdAndUpdate(req.params.id, req.body, {
+  espace = await Espace.findByIdAndUpdate(req.params._id, req.body, {
     runValidators: true,
     new: true,
   });
@@ -79,15 +79,15 @@ exports.updateEspace = asyncHandler(async (req, res, next) => {
  * @access private
  */
 exports.deleteEspace = asyncHandler(async (req, res, next) => {
-  const espace = await Espace.findById(req.params.id);
+  const espace = await Espace.findById(req.params._id);
 
   if (!espace) {
     return next(
-      new ErrorResponse(`Espace not found with the id of ${req.params.id}`, 404)
+      new ErrorResponse(`Espace not found with the id of ${req.params._id}`, 404)
     );
   }
 
-  await Espace.findByIdAndDelete(req.params.id);
+  await Espace.findByIdAndDelete(req.params._id);
 
   res.status(200).json({
     success: true,
