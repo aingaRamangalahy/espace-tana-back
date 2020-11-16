@@ -2,7 +2,7 @@ const express = require("express");
 const {
   getEspaces,
   createEspace,
-  getEspace,
+  getOneEspace,
   updateEspace,
   deleteEspace,
 } = require("../controllers/espace.controller");
@@ -14,7 +14,7 @@ router.route("/")
   .post(createEspace);
 
 router.route("/:_id")
-  .get(getEspace)
+  .get(getOneEspace)
   .put(updateEspace)
   .delete(deleteEspace);
 

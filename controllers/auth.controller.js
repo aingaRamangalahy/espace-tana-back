@@ -1,11 +1,10 @@
 const asyncHandler = require("../middlewares/asyncHandler");
 const User = require("../models/user.model");
-const { use } = require("../routes/auth.route");
 const ErrorResponse = require("../utils/errorResponse");
 
 /**
  * @description register
- * @route POST /api/v1/users/registe
+ * @route POST /api/v1/auth/register
  * @access public
  */
 exports.register = asyncHandler(async (req, res, next) => {
@@ -49,7 +48,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 /**
  * @description login
- * @route POST /api/v1/users/login
+ * @route POST /api/v1/auth/login
  * @access public
  */
 exports.login = asyncHandler(async (req, res, next) => {
@@ -97,7 +96,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 /**
  * @description logout
- * @route POST /api/v1/users/logout
+ * @route POST /api/v1/auth/logout
  * @access public
  */
 exports.logout = asyncHandler(async (req, res, next) => {
@@ -118,14 +117,14 @@ exports.logout = asyncHandler(async (req, res, next) => {
 
 /**
  * @description forgot password
- * @route POST /api/v1/users/forgotpassword
+ * @route POST /api/v1/auth/forgotpassword
  * @access public
  */
-exports.forgotPassword = asyncHandler(async (req, res, next) => {});
+exports.forgotPassword = asyncHandler(async () => {});
 
 /**
  * @description reset password
  * @route POST /api/v1/users/resetpassword
  * @access private
  */
-exports.resetPassword = asyncHandler(async (req, res, next) => {});
+exports.resetPassword = asyncHandler(async () => {});

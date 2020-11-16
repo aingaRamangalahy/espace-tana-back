@@ -12,6 +12,7 @@ exports.getEspaces = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: espaces,
+    count: espaces.length,
   });
 });
 
@@ -20,7 +21,7 @@ exports.getEspaces = asyncHandler(async (req, res, next) => {
  * @route GET /api/v1/espaces/espaceID
  * @access public
  */
-exports.getEspace = asyncHandler(async (req, res, next) => {
+exports.getOneEspace = asyncHandler(async (req, res, next) => {
   const espace = await Espace.findById(req.params._id);
 
   if (!espace) {
