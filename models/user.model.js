@@ -42,6 +42,12 @@ const UserSchema = new mongoose.Schema({
     select: false,
   },
 
+  profile: {
+    type: String,
+    required: false,
+    default: "no-profile.jpg"
+  },
+
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 
