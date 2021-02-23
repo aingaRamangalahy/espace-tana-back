@@ -11,7 +11,7 @@ const Review = require("../models/review.model");
 exports.getReviews = asyncHandler(async (req, res, next) => {
   if (req.params.espaceId) {
     const reviews = await Review.find({
-      bootcamp: req.params.espaceId,
+      espace: req.params.espaceId,
     });
 
     return res.status(200).json({
@@ -30,7 +30,7 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
 
 exports.getReview = asyncHandler(async (req, res, next) => {
   const review = await Review.findById(req.params.id).populate({
-    path: "bootcamp",
+    path: "espace",
     select: "name description",
   });
 
@@ -46,18 +46,18 @@ exports.getReview = asyncHandler(async (req, res, next) => {
 });
 
 //  @desc       Add review
-//  @route      POST /api/v1/bootcamps/:bootcampId/reviews
+//  @route      POST /api/v1/espace/:espaceId/reviews
 //  @access     Private
 exports.addReview = asyncHandler(async (req, res, next) => {
-  req.body.bootcamp = req.params.bootcampId;
+  req.body.espace = req.params.espaceId;
   req.body.user = req.user.id;
 
-  const bootcamp = await Espace.findById(req.params.bootcampId);
+  const espace = await Espace.findById(req.params.espaceId);
 
-  if (!bootcamp) {
+  if (!espace) {
     return next(
       new ErrorResponse(
-        `No bootcamp with the id of ${req.params.bootcampId}`,
+        `No espace with the id of ${req.params.espaceId}`,
         404
       )
     );

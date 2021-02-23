@@ -7,18 +7,24 @@ const {
   deleteEspace,
 } = require("../controllers/espace.controller");
 const advancedResults = require("../middlewares/advancedResults");
-const Espace = require("../models/espace.model")
-
+const Espace = require("../models/espace.model");
 const router = express.Router();
 
-const {protect, authorize} = require("../middlewares/auth")
-router.route("/")
-  .get(advancedResults(Espace), getEspaces)
-  .post(createEspace);
+const reviewRouter = require("./review.route");
 
-router.route("/:_id")
+// re-route into other resource routers
+router.use("/:espaceId/reviews", reviewRouter);
+
+const { protect, authorize } = require("../middlewares/auth");
+router
+  .route("/")
+  .get(advancedResults(Espace), getEspaces)
+  .post(protect, authorize("owner", "admin"), createEspace);
+
+router
+  .route("/:_id")
   .get(getOneEspace)
-  .put(updateEspace)
-  .delete(deleteEspace);
+  .put(protect, authorize("owner", "admin"), updateEspace)
+  .delete(protect, authorize("owner", "admin"), deleteEspace);
 
 module.exports = router;
