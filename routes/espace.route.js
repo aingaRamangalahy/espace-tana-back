@@ -11,6 +11,7 @@ const Espace = require("../models/espace.model")
 
 const router = express.Router();
 
+const {protect, authorize} = require("../middlewares/auth")
 router.route("/")
   .get(advancedResults(Espace), getEspaces)
   .post(createEspace);
