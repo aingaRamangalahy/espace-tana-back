@@ -10,6 +10,7 @@ const {
   updateReview,
   deleteReview,
 } = require("../controllers/review.controller");
+const { protect, authorize } = require("../middlewares/auth");
 
 router
   .route("/")
@@ -17,8 +18,12 @@ router
     advancedResults(Review, { path: "espace", select: "name description" }),
     getReviews
   )
-  .post(addReview); // to protect
+  .post(protect, authorize("user", "admin"), addReview);
 
-router.route("/:id").get(getReview).put(updateReview).delete(deleteReview);
+router
+  .route("/:id")
+  .get(getReview)
+  .put(protect, authorize("user", "admin"), updateReview)
+  .delete(protect, authorize("user", "admin"), deleteReview);
 
 module.exports = router;

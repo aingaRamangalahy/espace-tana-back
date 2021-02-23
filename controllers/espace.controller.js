@@ -8,12 +8,7 @@ const Espace = require("../models/espace.model");
  * @access public
  */
 exports.getEspaces = asyncHandler(async (req, res, next) => {
-  const espaces = await Espace.find();
-  res.status(200).json({
-    success: true,
-    data: espaces,
-    count: espaces.length,
-  });
+  res.status(200).json(res.advancedResults);
 });
 
 /**
@@ -51,7 +46,7 @@ exports.createEspace = asyncHandler(async (req, res, next) => {
 
 /**
  * @description update espace
- * @route PUT /api/v1/espaces/espaceID
+ * @route PUT /api/v1/espaces/:espaceID
  * @access private
  */
 exports.updateEspace = asyncHandler(async (req, res, next) => {
