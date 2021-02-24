@@ -67,13 +67,30 @@ UserSchema.pre("save", async function (next) {
 });
 
 /** methods and statics */
-UserSchema.methods.getSignedJwtToken = function () {
+
+// generate access token
+UserSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
-      id: this._id,
+      _id: this._id,
       role: this.role,
     },
-    config.SECRET_TOKEN
+    config.ACCES_TOKEN_SECRET, {
+      expiresIn: "15m"
+    }
+  );
+};
+
+// generate refresh token
+UserSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      role: this.role,
+    },
+    config.REFRESH_TOKEN_SECRET, {
+      expiresIn: "7d"
+    }
   );
 };
 

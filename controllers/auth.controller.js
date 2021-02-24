@@ -74,7 +74,8 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   // create token
-  const token = await user.getSignedJwtToken();
+  const accessToken = await user.generateAccessToken();
+  const refreshToken = await user.generateRefreshToken();
 
   // set user to connected
   user.connected = true;
@@ -90,17 +91,18 @@ exports.login = asyncHandler(async (req, res, next) => {
       role,
       connected,
     },
-    token,
+    accessToken,
+    refreshToken,
   });
 });
 
 /**
  * @description logout
  * @route POST /api/v1/auth/logout
- * @access public
+ * @access private
  */
 exports.logout = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.body._id);
+  const user = await User.findById(req.user._id);
 
   if (!user) {
     return next(new ErrorResponse(`Utilisateur non reconnu`, 404));
@@ -111,7 +113,7 @@ exports.logout = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    data: {},
+    message: "Utilisateur déconnecté",
   });
 });
 

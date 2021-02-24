@@ -5,7 +5,7 @@ const ErrorResponse = require("../utils/errorResponse");
 /**
  * @description get all users
  * @route GET /api/v1/users
- * @access private
+ * @access private admin only
  */
 exports.getUsers = asyncHandler(async (req, res, next) => {
   const users = await User.find();

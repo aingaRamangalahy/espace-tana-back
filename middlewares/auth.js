@@ -21,8 +21,10 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, config.SECRET_TOKEN);
-    req.user = await User.findById(docoded.id);
+    const decoded = jwt.verify(token, config.ACCES_TOKEN_SECRET);
+    req.user = await User.findById(decoded._id);
+    next();
+
   } catch (error) {
     return next(
       new ErrorResponse("Vous n'avez pas accès à cette ressource", 401)
@@ -36,7 +38,7 @@ exports.authorize = (...roles) => {
     if (!roles.includes(req.user.role)) {
       return next(
         new ErrorResponse(
-          ` Votre role ne vous permet pas d'acceder à cette ressource`,
+          `Votre role ne vous permet pas d'acceder à cette ressource`,
           403
         )
       );

@@ -8,7 +8,11 @@ const config = {
   SERVER_PORT: process.env["SERVER_PORT"],
   SERVER_HOST: process.env["SERVER_HOST"],
   MONGODB_URI: process.env["MONGODB_URI"],
-  SECRET_TOKEN: process.env["SECRET_TOKEN"],
+  
+  ACCES_TOKEN_SECRET: process.env["ACCES_TOKEN_SECRET"],
+  REFRESH_TOKEN_SECRET: process.env["REFRESH_TOKEN_SECRET"],
+
+
   GMAIL_ACCOUNT: process.env["GMAIL_ACCOUNT"],
   GMAIL_PASSWORD: process.env["GMAIL_PASSWORD"],
   FROM_EMAIL: process.env["FROM_EMAIL"],
